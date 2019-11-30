@@ -22,7 +22,7 @@ from db.datasets import datasets
 
 torch.backends.cudnn.enabled   = True
 torch.backends.cudnn.benchmark = True
-
+#解析配置文件和设置参数
 def parse_args():
     parser = argparse.ArgumentParser(description="Train CornerNet")
     parser.add_argument("cfg_file", help="config file", type=str)
@@ -33,7 +33,7 @@ def parse_args():
 
     args = parser.parse_args()
     return args
-
+#准备喂入数据
 def prefetch_data(db, queue, sample_data, data_aug):
     ind = 0
     print("start prefetching data...")
@@ -166,9 +166,10 @@ def train(training_dbs, validation_db, start_iter=0):
         validation_task.terminate()
 
 if __name__ == "__main__":
+    
     args = parse_args()
 
-    cfg_file = os.path.join(system_configs.config_dir, args.cfg_file + ".json")
+    cfg_file = os.path.join(system_configs.config_dir, args.cfg_file + ".json")#配置网络训练参数文件 是一个 dict
     with open(cfg_file, "r") as f:
         configs = json.load(f)
             
