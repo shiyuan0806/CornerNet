@@ -41,8 +41,12 @@ std::vector<at::Tensor> pool_backward(
     int32_t height  = input.size(2);
     int32_t width   = input.size(3);
 
-    auto max_val = at::zeros({batch, channel, width},torch::CUDA(at::kFloat));
-    auto max_ind = at::zeros({batch, channel, width},torch::CUDA(at::kLong));
+    //auto max_val = at::zeros({batch, channel, width},torch::CUDA(at::kFloat));
+    //auto max_ind = at::zeros({batch, channel, width},torch::CUDA(at::kLong));
+    //auto max_val = torch::zeros({batch, channel, width}, at::device(at::kCUDA).dtype(at::kFloat));
+    //auto max_ind = torch::zeros({batch, channel, width}, at::device(at::kCUDA).dtype(at::kLong));
+    auto max_val = torch::zeros({batch, channel, width}, torch::TensorOptions().dtype(torch::kFloat).device(torch::kCUDA));
+    auto max_ind = torch::zeros({batch, channel, width}, torch::TensorOptions().dtype(torch::kLong).device(torch::kCUDA));
 
     auto input_temp = input.select(3, 0);
     max_val.copy_(input_temp);
@@ -54,8 +58,12 @@ std::vector<at::Tensor> pool_backward(
     output_temp.copy_(grad_output_temp);
 
     auto un_max_ind = max_ind.unsqueeze(3);
-    auto gt_mask    = at::zeros({batch, channel, width},torch::CUDA(at::kByte));
-    auto max_temp   = at::zeros({batch, channel, width},torch::CUDA(at::kFloat));
+    //auto gt_mask    = at::zeros({batch, channel, width},torch::CUDA(at::kByte));
+    //auto max_temp   = at::zeros({batch, channel, width},torch::CUDA(at::kFloat));
+    //auto gt_mask    = torch::zeros({batch, channel, width},at::device(at::kCUDA).dtype(at::kByte));
+    //auto max_temp   = torch::zeros({batch, channel, width},at::device(at::kCUDA).dtype(at::kFloat));
+    auto gt_mask    = torch::zeros({batch, channel, width}, torch::TensorOptions().dtype(torch::kByte).device(torch::kCUDA));
+    auto max_temp   = torch::zeros({batch, channel, width}, torch::TensorOptions().dtype(torch::kFloat).device(torch::kCUDA));
     for (int32_t ind = 0; ind < width - 1; ++ind) {
         input_temp = input.select(3, ind + 1);
         at::gt_out(gt_mask, input_temp, max_val);

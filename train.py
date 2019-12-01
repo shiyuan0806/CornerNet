@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument("--iter", dest="start_iter",
                         help="train at iteration i",
                         default=0, type=int)
-    parser.add_argument("--threads", dest="threads", default=4, type=int)
+    parser.add_argument("--threads", dest="threads", default=1, type=int)
 
     args = parser.parse_args()
     return args

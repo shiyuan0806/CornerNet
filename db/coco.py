@@ -21,9 +21,9 @@ class MSCOCO(DETECTION):
 
         self._split = split
         self._dataset = {
-            "trainval": "trainval2014",
-            "minival": "minival2014",
-            "testdev": "testdev2017"
+            "trainval": "train2017",
+            "minival": "val2017",
+            "testdev": "val2017"
         }[self._split]
         
         self._coco_dir = os.path.join(data_dir, "coco")
@@ -32,7 +32,7 @@ class MSCOCO(DETECTION):
         self._label_file = os.path.join(self._label_dir, "instances_{}.json")
         self._label_file = self._label_file.format(self._dataset)
 
-        self._image_dir  = os.path.join(self._coco_dir, "images", self._dataset)
+        self._image_dir  = os.path.join(self._coco_dir, self._dataset)
         self._image_file = os.path.join(self._image_dir, "{}")
 
         self._data = "coco"
@@ -111,6 +111,7 @@ class MSCOCO(DETECTION):
         self._detections = {}
         for ind, (coco_image_id, image_id) in enumerate(tqdm(zip(coco_image_ids, self._image_ids))):
             image      = self._coco.loadImgs(coco_image_id)[0]
+            
             bboxes     = []
             categories = []
 
